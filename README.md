@@ -7,6 +7,7 @@ Các giap tiếp hỗ trợ gồm:
 - Firebase
 - HTTP(s)
 - NTP
+- FTP (file tranfer)
 - OTA
 
 Sử dụng: Xem ví dụ
