@@ -22,3 +22,5 @@ Ngoài ra user còn có thể add thêm trình xử lí loop qua hàm SIM7600_ad
 low level sẽ xử lí các tin nhắn AT của module sim gửi ra và gọi các trình xử lí đã được đăng kí tương ứng
 Ví dụ: khi 1 tin nhắn kiểu như +HTTPACTION: thì với tiêu đề +HTTPACTION thư viện sẽ gọi trình xử lí http ( tương tự với các chức năng khác)
 Bạn có thể thêm các trình xử lí khác vào miễn là bạn biết các tin nhắn AT hoạt động như nào
+
+lowlevel sử dụng 1 ring buffer để lưu trữ các tin nhắn AT để xử lí dần. Tuy nhiên nếu SIM7600_loop(); không được gọi thường xuyên mà bị trễ quá lâu ( do code của bạn dùng delay) thì ringbuffer có thể bị tràn và làm lỗi giao tiếp. Do đó hay hạn chế sử dụng delay trong main loop của bạn nhé !
