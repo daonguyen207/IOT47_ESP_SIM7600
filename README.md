@@ -10,7 +10,8 @@ Các giap tiếp hỗ trợ gồm:
 - FTP (file tranfer)
 - OTA
 
-Sử dụng thư viện: Xem ví dụ
+Sử dụng thư viện: Xem ví dụ.
+
 Thư viện được thiết kế để che đi hoàn toàn tập lệnh AT, bạn có thể sử dụng dễ dàng mà không cần biết các giao thức hoạt động như nào. Phần lớn các api đều là callback, do đó chương trình của bạn sẽ không bị block khi sử dụng các giao tiếp mạng.
 
 ------------------------------------------------------------
