@@ -1,0 +1,2 @@
+# IOT47_ESP_SIM7600
+Thư viện LTE SIMCOM cho ESP32
