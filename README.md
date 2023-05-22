@@ -10,9 +10,11 @@ Các giap tiếp hỗ trợ gồm:
 - FTP (file tranfer)
 - OTA
 
-Sử dụng: Xem ví dụ
+Sử dụng thư viện: Xem ví dụ
+Thư viện được thiết kế để che đi hoàn toàn tập lệnh AT, bạn có thể sử dụng dễ dàng mà không cần biết các giao thức hoạt động như nào. Phần lớn các api đều là callback, do đó chương trình của bạn sẽ không bị block khi sử dụng các giao tiếp mạng.
 
 ------------------------------------------------------------
+Phần này dành cho người muốn tìm hiểu và custom thư viện
 Cơ chế của thư viện:
 Đây là thư viện giao tiếp với module dòng 76XX, nó được thiết kế chủ yếu theo cơ chế bất đồng bộ với các cuộc gọi lại (Callback)
 Cơ chế hoạt động:
