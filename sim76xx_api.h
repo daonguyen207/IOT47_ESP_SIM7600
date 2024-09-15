@@ -16,10 +16,16 @@ const int16_t dBm[]={-113,-111,-110,-107,-105,-103,-101,-99,-97,-95,-93,-91,-89,
 };
 String simIP;
 bool SIM_init_ok = false;
+int simInitFlag=0;
 bool noLTE = false;
 void SIM7600_noLTE(bool _lte) //gọi hàm này ở setup -> true nếu không muốn mở mạng 4G LTE( chỉ sms, call)
 {
   noLTE = _lte;
+  if(noLTE == false)
+  {
+    SIM_init_ok = false;
+    simInitFlag=2;
+  }
 }
 void sim_loop();
 
@@ -43,6 +49,7 @@ String getNumWithHeader(String rx,String header)
     String value;
     for(int i=0;i<10;i++)
     {
+      if(rx[i+index]==' ')continue;
       if((rx[i+index]>='0') && (rx[i+index]<='9'))value+=(char)rx[i+index];
       else return value;
     }
@@ -123,6 +130,37 @@ void getIP(String rep)
      simIP.replace("\r","");
      simIP.replace("\n","");
      simIP.replace("OK","");
+  }
+}
+String endline_waitString(String reponse,uint32_t timeout)
+{
+  uint32_t t = millis();
+  String rx;
+  uint32_t tlog = millis();
+  while(1)
+  {
+    if(millis() -  t > timeout)return "";
+    if(SIM_SERIAL.available())
+    {
+      char c = (char)SIM_SERIAL.read();
+      rx+=c;
+      if(c == '\n')
+      {
+        if(rx.indexOf(reponse) != -1)return rx;
+        else rx="";
+      }
+    }
+    delay(0);
+    if(timeout == 100000)
+    {
+      if(millis() - tlog > 1000)
+      {
+        tlog = millis();
+        #ifdef SIM_ENABLE_LOG
+        Serial.print(".");
+        #endif
+      }
+    }
   }
 }
 String whileReponseString(String reponse,uint32_t timout) //chờ cho tới khi có phản hồi 
@@ -317,7 +355,6 @@ void SIM7600_on_ready_callback(SIM7600_callback_t _callback)
 
 void SIM7600_loop()
 {
-  static int simInitFlag=0;
   static uint32_t tResend=0;
   if(simInitFlag==0) //check hardwave
   {
