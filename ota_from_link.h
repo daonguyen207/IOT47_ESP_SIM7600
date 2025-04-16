@@ -8,6 +8,12 @@
  * Bạn phải tắt tất cả các kết nối stream như mqtt hoặc firebase trong lúc download
  */
 
+static bool muiltil_part_mode = false;
+void ota_enable_mutil_part(bool mode) //true nếu bạn muốn chia file để tải nhiều lần, bạn cần chủ động gọi Update.begin()
+{
+  muiltil_part_mode=mode;
+}
+
 typedef void (*ota_downloading_t)(uint32_t current, uint32_t total);
 ota_downloading_t ota_downloading_f;
 void ota_downloading_callback(ota_downloading_t _callback)
@@ -30,7 +36,7 @@ int ota_start(String ota_link)
            int index = rx.indexOf("+HTTPACTION: 0,200,");
            int payload_len = getNumByStartIndex(rx,index+19).toInt();   
            Serial.println("payload_len: " + String(payload_len));
-           Update.begin(payload_len);
+           if(!muiltil_part_mode)Update.begin(payload_len); // phía code user tự quản lí hàm này khi ở chế độ chia nhiều phần để tải về
            uint32_t demProces=0;
            uint32_t readLength = 0;
               while(readLength < payload_len)
