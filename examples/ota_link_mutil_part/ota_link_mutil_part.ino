@@ -28,7 +28,7 @@ void SIM_on_lte(void *arg)
   Serial.println("Đã có mạng");
   ota_enable_mutil_part(true); // bật chế độ tải nhiều phân đoạn
   ota_downloading_callback(OTA_downloadding);
-  Update.begin(); // chuẩn bị phần vùng OTA để lưu dữ liệu tải về
+  Update.begin(UPDATE_SIZE_UNKNOWN); // chuẩn bị phần vùng OTA để lưu dữ liệu tải về
   int err = ota_start("https://raw.githubusercontent.com/daonguyen207/IOT47_ESP_SIM7600/main/examples/ota_link_mutil_part/hello_part1.bin"); //tải part 1
   Serial.println("ota part1 err code: " + String(err));
   if(err == 0)
@@ -37,7 +37,7 @@ void SIM_on_lte(void *arg)
     Serial.println("ota part 2 err code: " + String(err));
     if(err == 0)
     {
-      if (Update.end())
+      if (Update.end(true))
       {
         if (Update.isFinished())
         {
@@ -53,6 +53,7 @@ void SIM_on_lte(void *arg)
       else
       {
           Serial.println("Error occured #: " + String(Update.getError()));
+          Update.printError(Serial);
       }
     }
   }
