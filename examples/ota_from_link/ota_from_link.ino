@@ -8,7 +8,7 @@
 
 /*  Note
  *  1.Trong hàm setup gọi SIM7600_on_lte_ready_callback để đăng kí sự kiện LTE sẵn sàng
- *  2.Dùng ota_start để download file ota thông qua giao thức http: Lưu ý: 1 số module sim chỉ có cache giới hạn dưới 700KB, nếu thấy mã lỗi 707 trả về tức là file của bạn có kích thước quá lớn
+ *  2.Dùng ota_start để download file ota thông qua giao thức http: Lưu ý: 1 số module sim chỉ có cache giới hạn dưới 700KB, nếu thấy mã lỗi 707 trả về tức là file của bạn có kích thước quá lớn, bạn cần dùng ví dụ ota_link_mutil_part
  *  Nếu có bất kì vấn đề gì, vui lòng tạo Issues trên https://github.com/daonguyen207/IOT47_SIM76XX để được hỗ trợ giải quyết
  */
 
