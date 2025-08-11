@@ -8,7 +8,7 @@
  * Lưu ý: Chỉ hỗ trợ sdt 10 số
  */
 
-int sms_sent_index;
+int sms_sent_index; 
 
 int find_char(String s,char c,int count_c)
 {
@@ -193,3 +193,4 @@ void call_calling(String phone)
   SIM_SERIAL.println("ATD"+phone+";");
 }
 #endif
+
