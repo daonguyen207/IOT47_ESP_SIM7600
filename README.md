@@ -1,7 +1,7 @@
 # IOT47_ESP_SIM7600
 Thư viện LTE SIMCOM cho ESP32
 Các giao tiếp hỗ trợ gồm:
-- SMS
+- SMS ( hỗ trợ gửi tin nhắn tiếng Việt )
 - CALL
 - MQTT(s)
 - Firebase
