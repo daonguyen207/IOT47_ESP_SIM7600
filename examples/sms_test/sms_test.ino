@@ -38,12 +38,22 @@ void loop()
   SIM7600_loop();
   if(Serial.available()) //nếu gõ a thì gửi sms
   {
-    if(Serial.read() == 'a')
-    {
-      int result = sms_sent_andWait("0394733311","Xin chào các bạn, tôi là IOT47",5000);
-      if(result == -1)Serial.println("Gửi sms thất bại");
-      else Serial.println("Gửi sms thành công");
+    String raw="";
+    String phone,message;
+    while(Serial.available())raw+=(char)Serial.read();
+    // Tìm vị trí xuống dòng đầu tiên
+    int pos = raw.indexOf('|');
+    if (pos != -1) {
+      phone = raw.substring(0, pos);              // từ đầu đến trước \n
+      message = raw.substring(pos + 1);           // từ sau \n tới hết
+      message.trim();                                    // bỏ khoảng trắng, \r, \n thừa
+
+      Serial.println("Gửi tin nhắn sms tới: Phone: " + phone);
+      Serial.print("   Message: " + message);
     }
+    int result = sms_sent_andWait(phone,message,5000);
+    if(result == -1)Serial.println("Gửi sms thất bại");
+    else Serial.println("Gửi sms thành công");
   }
   //call_calling("0398647714");
 }
