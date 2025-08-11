@@ -397,6 +397,7 @@ void SIM7600_loop()
              {
                 simInitFlag = -1;
                 SIM_init_ok=true;
+                SIM_SERIAL.println("AT+CMGF=1");
                 #ifdef SIM_ENABLE_LOG
                 Serial.println("SIM INIT DONE");   
                 #endif
@@ -542,9 +543,26 @@ void get_data_to_buffer()
     Serial.write(c);
     #endif
     SIM_BUFFER[SIM_WRITE_index] = c;
-    if(SIM_BUFFER[SIM_WRITE_index] == '\n')SIM_COUNT_CMD++;
+    if(SIM_BUFFER[SIM_WRITE_index] == '\n')
+    {
+        SIM_COUNT_CMD++;
+        //Serial.println("SIM_COUNT_CMD: " + String(SIM_COUNT_CMD));
+    }
     SIM_WRITE_index++; if(SIM_WRITE_index >= SIM_BUFF_LENGTH) SIM_WRITE_index = 0;
   }
+}
+void dump_buffer_info()
+{
+  Serial.println("SIM_WRITE_index: " + String(SIM_WRITE_index));
+  Serial.println("SIM_READ_index: " + String(SIM_READ_index));
+  Serial.println("SIM_BUFF_LENGTH: " + String(SIM_BUFF_LENGTH));
+  Serial.println("SIM_COUNT_CMD: " + String(SIM_COUNT_CMD));
+  Serial.println();Serial.println();
+  for(int i=SIM_READ_index;i<SIM_WRITE_index;i++)
+  {
+    Serial.write(SIM_BUFFER[i]);
+  }
+  Serial.println();Serial.println();
 }
 void SIM_SKIP_CR()
 {
@@ -617,11 +635,13 @@ void wait_data(int wait)//khi module sim truyền data ra, tốc độ truyền 
 }
 void sim_loop()
 {
+  static uint32_t tcheckErr = 0;
+  static char flagErr = 0;
   get_data_to_buffer();
   while(SIM_COUNT_CMD>0)
   {
     String cmd = read_to_LF();
-    //Serial.print("[");Serial.print(cmd);Serial.print("]"); 
+    Serial.print("[");Serial.print(cmd);Serial.print("]"); 
     if(cmd[0] == '+') //system handle
     {
       if(cmd.indexOf("+CIPEVENT: NETWORK CLOSED UNEXPECTEDLY") != -1)
@@ -633,6 +653,37 @@ void sim_loop()
     for(int i=0;i<counter_handle;i++)if( list_handle[i] != 0) list_handle[i](cmd); //run app handle
   }
   for(int i=0;i<counter_user_loop;i++)if( list_user_loop[i] != 0) list_user_loop[i](); //run loop user
+  //check error
+  if(SIM_READ_index != SIM_WRITE_index) //nếu chenh lệch bộ đệm SIM_COUNT_CMD == 0 thì có lỗi
+  {
+    if(SIM_COUNT_CMD == 0)
+    {
+      if(flagErr==0)
+      {
+        flagErr=1;
+        tcheckErr = millis();
+      }
+    }
+  }
+  else flagErr =0; 
+  //xử lí lỗi sau 10s
+  if(flagErr==1)
+  {
+    if(millis() - tcheckErr > 10000)
+    {
+      if(SIM_READ_index != SIM_WRITE_index)
+      {
+        //xử lí bằng cách xóa hết bộ đệm
+        #ifdef SIM_ENABLE_LOG
+        Serial.println("Lỗi bộ đệm: " + String(SIM_READ_index) + "," + String(SIM_WRITE_index));
+        #endif
+        SIM_COUNT_CMD=0;
+        SIM_READ_index=0;
+        SIM_WRITE_index=0;
+        flagErr=0;
+      }
+    }
+  }
 }
 
 void startAT_SYNC_mode()
