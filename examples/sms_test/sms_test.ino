@@ -36,7 +36,7 @@ void setup()
 void loop() 
 {
   SIM7600_loop();
-  if(Serial.available()) //nếu gõ a thì gửi sms
+  if(Serial.available()) //nhập tin nhắn cần gửi đi theo kiểu 0394733311|Xin chào, đây là sms hỗ trợ tiếng việt\r\n
   {
     String raw="";
     String phone,message;
@@ -57,3 +57,4 @@ void loop()
   }
   //call_calling("0398647714");
 }
+
